@@ -4,8 +4,10 @@ import sys
 import os
 
 def disassemble_exe(exe_file, output_file):
-    subprocess.run(['objdump', '-d', '-M', 'intel', exe_file], stdout=output_file)
-    print(f"{exe_file} sikeresen diszasszemblálva assembly kóddá: {output_file}")
+
+    with open(output_file, "w") as f:
+        subprocess.run(['objdump', '-d', '-M', 'intel', exe_file], stdout=f)
+        print(f"{exe_file} sikeresen diszasszemblálva assembly kóddá: {output_file}")
 
 if __name__ == "__main__":
     main_path = str(sys.argv[1])
