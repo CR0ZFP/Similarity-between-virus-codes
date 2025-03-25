@@ -1,11 +1,20 @@
 import subprocess
+from tqdm import tqdm
+import sys
+import os
 
 def disassemble_exe(exe_file, output_file):
     subprocess.run(['objdump', '-d', '-M', 'intel', exe_file], stdout=output_file)
     print(f"{exe_file} sikeresen diszasszemblálva assembly kóddá: {output_file}")
 
 if __name__ == "__main__":
-    input_exe = input("Kérlek add meg az exe fájlt: ")
-    output_asm = input("Kérlek add meg a kimeneti assembly fájl nevét: ")
-    with open(output_asm, 'w') as output_file:
-        disassemble_exe(input_exe, output_file)
+    main_path = str(sys.argv[1])
+    output_path = str(sys.argv[2])
+
+    for file in tqdm(os.listdir(main_path), desc="Disassemble files", unit="file"):
+        exe_file_path= os.path.join(main_path,file) #Az útvonalt és a file nevét összemergeljük
+        with open (exe_file_path, "rb") as f:
+            magic = f.read(2)
+        if magic == b"MZ": #Ha a file MZ-vel kezdődik, akkor exe file
+            asm_file_path = os.path.join(output_path, f"{file}.asm")
+            disassemble_exe(exe_file_path, asm_file_path)
