@@ -18,5 +18,5 @@ if __name__ == "__main__":
         with open (exe_file_path, "rb") as f:
             magic = f.read(2)
         if magic == b"MZ": #Ha a file MZ-vel kezdődik, akkor exe file
-            asm_file_path = os.path.join(output_path, f"{file}.asm")
+            asm_file_path = os.path.join(output_path, str.strip(f"{file}.asm"),".exe")
             disassemble_exe(exe_file_path, asm_file_path)
