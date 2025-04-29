@@ -60,7 +60,7 @@ def extract_sections(pe):
     section_features = []
     for section in pe.sections:
         section_features.append({
-            "section_name": section.Name.decode('utf-8').strip(),
+            "section_name": section.Name.decode('utf-8', errors='ignore').strip(),
             "section_size": section.SizeOfRawData,
             "section_entropy": calculate_entropy(section.get_data()),
             "section_characteristics": section.Characteristics
@@ -88,11 +88,11 @@ def extract_import_details(pe):
     imports = []
     if hasattr(pe, "DIRECTORY_ENTRY_IMPORT"):
         for entry in pe.DIRECTORY_ENTRY_IMPORT:
-            dll_name = entry.dll.decode('utf-8')
+            dll_name = entry.dll.decode('utf-8', errors='ignore')
             for imp in entry.imports:
                 imports.append({
                     "dll": dll_name,
-                    "function": imp.name.decode('utf-8') if imp.name else None
+                    "function": imp.name.decode('utf-8', errors='ignore') if imp.name else None
                 })
     return imports
 
@@ -101,7 +101,7 @@ def extract_export_details(pe):
     exports = []
     if hasattr(pe, "DIRECTORY_ENTRY_EXPORT"):
         for symbol in pe.DIRECTORY_ENTRY_EXPORT.symbols:
-            exports.append(symbol.name.decode('utf-8') if symbol.name else None)
+            exports.append(symbol.name.decode('utf-8', errors='ignore') if symbol.name else None)
     return exports
 
 
